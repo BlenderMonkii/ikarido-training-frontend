@@ -34,5 +34,20 @@ pipeline {
                 '''
             }
         }
+
+        stage('Deploy') {
+            agent {
+                docker {
+                    image 'node:23-alpine3.20'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    yarn install netlify-cli
+                    node_modules/.bin/netlify --version
+                '''
+            }
+        }
     }
 }
