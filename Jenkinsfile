@@ -14,7 +14,7 @@ pipeline {
                     ls -la
                     node --version
                     yarn --version
-                    yarn ci
+                    yarn install --frozen-lockfile
                     yarn build
                     ls -la
                 '''
