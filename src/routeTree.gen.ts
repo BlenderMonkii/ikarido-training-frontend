@@ -11,10 +11,20 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as CalendarImport } from './routes/calendar'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
+import { Route as SessionsIndexImport } from './routes/sessions/index'
+import { Route as ExercisesIndexImport } from './routes/exercises/index'
+import { Route as ExercisesCreateIndexImport } from './routes/exercises/create/index'
 
 // Create/Update Routes
+
+const CalendarRoute = CalendarImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AboutRoute = AboutImport.update({
   id: '/about',
@@ -25,6 +35,24 @@ const AboutRoute = AboutImport.update({
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const SessionsIndexRoute = SessionsIndexImport.update({
+  id: '/sessions/',
+  path: '/sessions/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ExercisesIndexRoute = ExercisesIndexImport.update({
+  id: '/exercises/',
+  path: '/exercises/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ExercisesCreateIndexRoute = ExercisesCreateIndexImport.update({
+  id: '/exercises/create/',
+  path: '/exercises/create/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -46,6 +74,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
+    '/calendar': {
+      id: '/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof CalendarImport
+      parentRoute: typeof rootRoute
+    }
+    '/exercises/': {
+      id: '/exercises/'
+      path: '/exercises'
+      fullPath: '/exercises'
+      preLoaderRoute: typeof ExercisesIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/sessions/': {
+      id: '/sessions/'
+      path: '/sessions'
+      fullPath: '/sessions'
+      preLoaderRoute: typeof SessionsIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/exercises/create/': {
+      id: '/exercises/create/'
+      path: '/exercises/create'
+      fullPath: '/exercises/create'
+      preLoaderRoute: typeof ExercisesCreateIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -54,36 +110,75 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/calendar': typeof CalendarRoute
+  '/exercises': typeof ExercisesIndexRoute
+  '/sessions': typeof SessionsIndexRoute
+  '/exercises/create': typeof ExercisesCreateIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/calendar': typeof CalendarRoute
+  '/exercises': typeof ExercisesIndexRoute
+  '/sessions': typeof SessionsIndexRoute
+  '/exercises/create': typeof ExercisesCreateIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/calendar': typeof CalendarRoute
+  '/exercises/': typeof ExercisesIndexRoute
+  '/sessions/': typeof SessionsIndexRoute
+  '/exercises/create/': typeof ExercisesCreateIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/calendar'
+    | '/exercises'
+    | '/sessions'
+    | '/exercises/create'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about'
-  id: '__root__' | '/' | '/about'
+  to:
+    | '/'
+    | '/about'
+    | '/calendar'
+    | '/exercises'
+    | '/sessions'
+    | '/exercises/create'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/calendar'
+    | '/exercises/'
+    | '/sessions/'
+    | '/exercises/create/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  CalendarRoute: typeof CalendarRoute
+  ExercisesIndexRoute: typeof ExercisesIndexRoute
+  SessionsIndexRoute: typeof SessionsIndexRoute
+  ExercisesCreateIndexRoute: typeof ExercisesCreateIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  CalendarRoute: CalendarRoute,
+  ExercisesIndexRoute: ExercisesIndexRoute,
+  SessionsIndexRoute: SessionsIndexRoute,
+  ExercisesCreateIndexRoute: ExercisesCreateIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -97,7 +192,11 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/about"
+        "/about",
+        "/calendar",
+        "/exercises/",
+        "/sessions/",
+        "/exercises/create/"
       ]
     },
     "/": {
@@ -105,6 +204,18 @@ export const routeTree = rootRoute
     },
     "/about": {
       "filePath": "about.tsx"
+    },
+    "/calendar": {
+      "filePath": "calendar.tsx"
+    },
+    "/exercises/": {
+      "filePath": "exercises/index.tsx"
+    },
+    "/sessions/": {
+      "filePath": "sessions/index.tsx"
+    },
+    "/exercises/create/": {
+      "filePath": "exercises/create/index.tsx"
     }
   }
 }

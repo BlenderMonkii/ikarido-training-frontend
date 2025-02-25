@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { getExercises, postExercises } from "../api/API";
+import { getExercises, postExercises } from "../lib/api/API";
 import { useEffect } from "react";
-import { Exercise, FingerboardExercise } from "../types/Exercise";
+import { Exercise, FingerboardExercise } from "../lib/types/Exercise";
 import { useMutation } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/")({
@@ -24,7 +24,7 @@ function Index() {
   });
 
   return (
-    <div className="p-2">
+    <div className="p-6 bg-red-100">
       <h3>Welcome Home!</h3>
       <div>
         <button

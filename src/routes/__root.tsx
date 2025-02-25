@@ -1,33 +1,72 @@
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
-import { Footer } from "../components/Footer";
-import { MenuIconButton } from "../components/MenuIconButton";
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { Header } from "../components/Header";
-import { Menu } from "../components/Menu";
-import { getUser } from "../api/API";
 
 export const Route = createRootRoute({
-  component: () => (
-    <>
-      <div className="p-2 flex gap-2">
-        <Link to="/" className="[&.active]:font-bold">
-          Home
-        </Link>{" "}
-        <Link to="/about" className="[&.active]:font-bold">
-          About
-        </Link>
-      </div>
-      <hr />
-      <App />
-      <TanStackRouterDevtools />
-    </>
-  ),
+  component: () => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    return (
+      <>
+        <div className="flex justify-between">
+          <h1 className="p-4">Ikari-do</h1>
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <img
+              src="../public/Ikari_Do_Rund_2000x2000_Color_PinkBlauGold2.png"
+              width={74}
+              height={74}
+              className="relative top-4 right-2"
+            />
+          </button>
+        </div>
+        {isMenuOpen ? (
+          <div className="flex flex-col justify-center items-center gap-2">
+            <Link
+              to="/"
+              className="[&.active]:font-bold"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Home
+            </Link>
+            <Link
+              to="/calendar"
+              className="[&.active]:font-bold"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Calendar
+            </Link>
+            <Link
+              to="/sessions"
+              className="[&.active]:font-bold"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Sessions
+            </Link>
+            <Link
+              to="/exercises"
+              className="[&.active]:font-bold"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Exercises
+            </Link>
+            <Link
+              to="/about"
+              className="[&.active]:font-bold"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              About
+            </Link>
+          </div>
+        ) : (
+          <App />
+        )}
+        <TanStackRouterDevtools />
+      </>
+    );
+  },
 });
 
 const App = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 768);
   useEffect(() => {
     const handleResize = () => {
@@ -37,38 +76,24 @@ const App = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  const { data, isPending } = useQuery({
-    queryKey: ["user", 1],
-    queryFn: async () => {
-      return await getUser(1);
-    },
-  });
+
   return (
     <div className="App">
       {isLargeScreen ? (
         <>
-          <Header />
-          <main>
+          <main className="bg-red-100">
             <h1>App</h1>
             <div className="mobile-header">
               <h1>Ikari Do</h1>
-              <MenuIconButton onClick={() => setIsMenuOpen(!isMenuOpen)} />
               <Outlet />
             </div>
           </main>
-          <Footer />
         </>
       ) : (
         <>
-          {isMenuOpen && <Menu />}
-          <main>
-            <h1>App</h1>
+          <main className="p-4">
             <Outlet />
-            <div>
-              {isPending ? "loading..." : <div>{JSON.stringify(data)}</div>}
-            </div>
           </main>
-          <Footer />
         </>
       )}
     </div>

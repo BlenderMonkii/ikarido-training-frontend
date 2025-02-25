@@ -8,7 +8,6 @@ export type Exercise = {
   duration?: number;
   isPublic: boolean;
   location?: string;
-  repetitions?: number;
   exerciseType: string;
   timer: Timer;
 };
