@@ -11,18 +11,28 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as CalendarImport } from './routes/calendar'
+import { Route as RegisterImport } from './routes/register'
+import { Route as LoginImport } from './routes/login'
 import { Route as AboutImport } from './routes/about'
+import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as IndexImport } from './routes/index'
-import { Route as SessionsIndexImport } from './routes/sessions/index'
-import { Route as ExercisesIndexImport } from './routes/exercises/index'
-import { Route as ExercisesCreateIndexImport } from './routes/exercises/create/index'
+import { Route as AuthenticatedSessionsIndexImport } from './routes/_authenticated/sessions/index'
+import { Route as AuthenticatedExercisesIndexImport } from './routes/_authenticated/exercises/index'
+import { Route as AuthenticatedSessionsSessionIdImport } from './routes/_authenticated/sessions/$sessionId'
+import { Route as AuthenticatedSessionsCreateIndexImport } from './routes/_authenticated/sessions/create/index'
+import { Route as AuthenticatedExercisesCreateIndexImport } from './routes/_authenticated/exercises/create/index'
 
 // Create/Update Routes
 
-const CalendarRoute = CalendarImport.update({
-  id: '/calendar',
-  path: '/calendar',
+const RegisterRoute = RegisterImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LoginRoute = LoginImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -32,29 +42,52 @@ const AboutRoute = AboutImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AuthenticatedRoute = AuthenticatedImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const SessionsIndexRoute = SessionsIndexImport.update({
-  id: '/sessions/',
-  path: '/sessions/',
-  getParentRoute: () => rootRoute,
-} as any)
+const AuthenticatedSessionsIndexRoute = AuthenticatedSessionsIndexImport.update(
+  {
+    id: '/sessions/',
+    path: '/sessions/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any,
+)
 
-const ExercisesIndexRoute = ExercisesIndexImport.update({
-  id: '/exercises/',
-  path: '/exercises/',
-  getParentRoute: () => rootRoute,
-} as any)
+const AuthenticatedExercisesIndexRoute =
+  AuthenticatedExercisesIndexImport.update({
+    id: '/exercises/',
+    path: '/exercises/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
-const ExercisesCreateIndexRoute = ExercisesCreateIndexImport.update({
-  id: '/exercises/create/',
-  path: '/exercises/create/',
-  getParentRoute: () => rootRoute,
-} as any)
+const AuthenticatedSessionsSessionIdRoute =
+  AuthenticatedSessionsSessionIdImport.update({
+    id: '/sessions/$sessionId',
+    path: '/sessions/$sessionId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedSessionsCreateIndexRoute =
+  AuthenticatedSessionsCreateIndexImport.update({
+    id: '/sessions/create/',
+    path: '/sessions/create/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
+const AuthenticatedExercisesCreateIndexRoute =
+  AuthenticatedExercisesCreateIndexImport.update({
+    id: '/exercises/create/',
+    path: '/exercises/create/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -67,6 +100,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedImport
+      parentRoute: typeof rootRoute
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -74,111 +114,175 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
-    '/calendar': {
-      id: '/calendar'
-      path: '/calendar'
-      fullPath: '/calendar'
-      preLoaderRoute: typeof CalendarImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
-    '/exercises/': {
-      id: '/exercises/'
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterImport
+      parentRoute: typeof rootRoute
+    }
+    '/_authenticated/sessions/$sessionId': {
+      id: '/_authenticated/sessions/$sessionId'
+      path: '/sessions/$sessionId'
+      fullPath: '/sessions/$sessionId'
+      preLoaderRoute: typeof AuthenticatedSessionsSessionIdImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/exercises/': {
+      id: '/_authenticated/exercises/'
       path: '/exercises'
       fullPath: '/exercises'
-      preLoaderRoute: typeof ExercisesIndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthenticatedExercisesIndexImport
+      parentRoute: typeof AuthenticatedImport
     }
-    '/sessions/': {
-      id: '/sessions/'
+    '/_authenticated/sessions/': {
+      id: '/_authenticated/sessions/'
       path: '/sessions'
       fullPath: '/sessions'
-      preLoaderRoute: typeof SessionsIndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthenticatedSessionsIndexImport
+      parentRoute: typeof AuthenticatedImport
     }
-    '/exercises/create/': {
-      id: '/exercises/create/'
+    '/_authenticated/exercises/create/': {
+      id: '/_authenticated/exercises/create/'
       path: '/exercises/create'
       fullPath: '/exercises/create'
-      preLoaderRoute: typeof ExercisesCreateIndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthenticatedExercisesCreateIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/sessions/create/': {
+      id: '/_authenticated/sessions/create/'
+      path: '/sessions/create'
+      fullPath: '/sessions/create'
+      preLoaderRoute: typeof AuthenticatedSessionsCreateIndexImport
+      parentRoute: typeof AuthenticatedImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedSessionsSessionIdRoute: typeof AuthenticatedSessionsSessionIdRoute
+  AuthenticatedExercisesIndexRoute: typeof AuthenticatedExercisesIndexRoute
+  AuthenticatedSessionsIndexRoute: typeof AuthenticatedSessionsIndexRoute
+  AuthenticatedExercisesCreateIndexRoute: typeof AuthenticatedExercisesCreateIndexRoute
+  AuthenticatedSessionsCreateIndexRoute: typeof AuthenticatedSessionsCreateIndexRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedSessionsSessionIdRoute: AuthenticatedSessionsSessionIdRoute,
+  AuthenticatedExercisesIndexRoute: AuthenticatedExercisesIndexRoute,
+  AuthenticatedSessionsIndexRoute: AuthenticatedSessionsIndexRoute,
+  AuthenticatedExercisesCreateIndexRoute:
+    AuthenticatedExercisesCreateIndexRoute,
+  AuthenticatedSessionsCreateIndexRoute: AuthenticatedSessionsCreateIndexRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '': typeof AuthenticatedRouteWithChildren
   '/about': typeof AboutRoute
-  '/calendar': typeof CalendarRoute
-  '/exercises': typeof ExercisesIndexRoute
-  '/sessions': typeof SessionsIndexRoute
-  '/exercises/create': typeof ExercisesCreateIndexRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/sessions/$sessionId': typeof AuthenticatedSessionsSessionIdRoute
+  '/exercises': typeof AuthenticatedExercisesIndexRoute
+  '/sessions': typeof AuthenticatedSessionsIndexRoute
+  '/exercises/create': typeof AuthenticatedExercisesCreateIndexRoute
+  '/sessions/create': typeof AuthenticatedSessionsCreateIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '': typeof AuthenticatedRouteWithChildren
   '/about': typeof AboutRoute
-  '/calendar': typeof CalendarRoute
-  '/exercises': typeof ExercisesIndexRoute
-  '/sessions': typeof SessionsIndexRoute
-  '/exercises/create': typeof ExercisesCreateIndexRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/sessions/$sessionId': typeof AuthenticatedSessionsSessionIdRoute
+  '/exercises': typeof AuthenticatedExercisesIndexRoute
+  '/sessions': typeof AuthenticatedSessionsIndexRoute
+  '/exercises/create': typeof AuthenticatedExercisesCreateIndexRoute
+  '/sessions/create': typeof AuthenticatedSessionsCreateIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/about': typeof AboutRoute
-  '/calendar': typeof CalendarRoute
-  '/exercises/': typeof ExercisesIndexRoute
-  '/sessions/': typeof SessionsIndexRoute
-  '/exercises/create/': typeof ExercisesCreateIndexRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/_authenticated/sessions/$sessionId': typeof AuthenticatedSessionsSessionIdRoute
+  '/_authenticated/exercises/': typeof AuthenticatedExercisesIndexRoute
+  '/_authenticated/sessions/': typeof AuthenticatedSessionsIndexRoute
+  '/_authenticated/exercises/create/': typeof AuthenticatedExercisesCreateIndexRoute
+  '/_authenticated/sessions/create/': typeof AuthenticatedSessionsCreateIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | ''
     | '/about'
-    | '/calendar'
+    | '/login'
+    | '/register'
+    | '/sessions/$sessionId'
     | '/exercises'
     | '/sessions'
     | '/exercises/create'
+    | '/sessions/create'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | ''
     | '/about'
-    | '/calendar'
+    | '/login'
+    | '/register'
+    | '/sessions/$sessionId'
     | '/exercises'
     | '/sessions'
     | '/exercises/create'
+    | '/sessions/create'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/about'
-    | '/calendar'
-    | '/exercises/'
-    | '/sessions/'
-    | '/exercises/create/'
+    | '/login'
+    | '/register'
+    | '/_authenticated/sessions/$sessionId'
+    | '/_authenticated/exercises/'
+    | '/_authenticated/sessions/'
+    | '/_authenticated/exercises/create/'
+    | '/_authenticated/sessions/create/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AboutRoute: typeof AboutRoute
-  CalendarRoute: typeof CalendarRoute
-  ExercisesIndexRoute: typeof ExercisesIndexRoute
-  SessionsIndexRoute: typeof SessionsIndexRoute
-  ExercisesCreateIndexRoute: typeof ExercisesCreateIndexRoute
+  LoginRoute: typeof LoginRoute
+  RegisterRoute: typeof RegisterRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AboutRoute: AboutRoute,
-  CalendarRoute: CalendarRoute,
-  ExercisesIndexRoute: ExercisesIndexRoute,
-  SessionsIndexRoute: SessionsIndexRoute,
-  ExercisesCreateIndexRoute: ExercisesCreateIndexRoute,
+  LoginRoute: LoginRoute,
+  RegisterRoute: RegisterRoute,
 }
 
 export const routeTree = rootRoute
@@ -192,30 +296,53 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/_authenticated",
         "/about",
-        "/calendar",
-        "/exercises/",
-        "/sessions/",
-        "/exercises/create/"
+        "/login",
+        "/register"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
+    "/_authenticated": {
+      "filePath": "_authenticated.tsx",
+      "children": [
+        "/_authenticated/sessions/$sessionId",
+        "/_authenticated/exercises/",
+        "/_authenticated/sessions/",
+        "/_authenticated/exercises/create/",
+        "/_authenticated/sessions/create/"
+      ]
+    },
     "/about": {
       "filePath": "about.tsx"
     },
-    "/calendar": {
-      "filePath": "calendar.tsx"
+    "/login": {
+      "filePath": "login.tsx"
     },
-    "/exercises/": {
-      "filePath": "exercises/index.tsx"
+    "/register": {
+      "filePath": "register.tsx"
     },
-    "/sessions/": {
-      "filePath": "sessions/index.tsx"
+    "/_authenticated/sessions/$sessionId": {
+      "filePath": "_authenticated/sessions/$sessionId.tsx",
+      "parent": "/_authenticated"
     },
-    "/exercises/create/": {
-      "filePath": "exercises/create/index.tsx"
+    "/_authenticated/exercises/": {
+      "filePath": "_authenticated/exercises/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/sessions/": {
+      "filePath": "_authenticated/sessions/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/exercises/create/": {
+      "filePath": "_authenticated/exercises/create/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/sessions/create/": {
+      "filePath": "_authenticated/sessions/create/index.tsx",
+      "parent": "/_authenticated"
     }
   }
 }

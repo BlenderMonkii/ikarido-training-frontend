@@ -9,12 +9,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../../../components/ui/form";
-import { Input } from "../../../components/ui/input";
-import { Checkbox } from "../../../components/ui/checkbox";
-import { Button } from "../../../components/ui/button";
+} from "../../../../components/ui/form";
+import { Input } from "../../../../components/ui/input";
+import { Checkbox } from "../../../../components/ui/checkbox";
+import { Button } from "../../../../components/ui/button";
+import { useMutation } from "@tanstack/react-query";
+import { postExercises } from "../../../../lib/api/API";
 
-export const Route = createFileRoute("/exercises/create/")({
+export const Route = createFileRoute("/_authenticated/exercises/create/")({
   component: RouteComponent,
 });
 
@@ -55,9 +57,14 @@ function RouteComponent() {
     },
   });
 
+  const mutation = useMutation({
+    mutationFn: (data: ExerciseFormValues) => {
+      return postExercises(data);
+    },
+  });
+
   const onSubmit = (data: ExerciseFormValues) => {
-    console.log("Final data:", data);
-    // Hier dann postExercises() mit TanStack Query aufrufen
+    mutation.mutate(data);
   };
 
   return (

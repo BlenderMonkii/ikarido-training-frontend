@@ -1,15 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { getExercises } from "../../lib/api/API";
+import { getExercises } from "../../../lib/api/API";
 import {
   Card,
   CardHeader,
   CardDescription,
   CardContent,
-} from "../../components/ui/card";
-import { Exercise } from "../../lib/types/Exercise";
-import { Button } from "../../components/ui/button";
+} from "../../../components/ui/card";
+import { Exercise } from "../../../lib/types/Exercise";
+import { Button } from "../../../components/ui/button";
 
-export const Route = createFileRoute("/exercises/")({
+export const Route = createFileRoute("/_authenticated/exercises/")({
   loader: async () => await getExercises(),
   component: RouteComponent,
 });
@@ -37,11 +37,12 @@ function RouteComponent() {
 
 type ExerciseCardProps = {
   exercise: Exercise;
+  className?: string;
 };
 
-const ExerciseCard = ({ exercise }: ExerciseCardProps) => {
+export const ExerciseCard = ({ exercise, className }: ExerciseCardProps) => {
   return (
-    <Card>
+    <Card className={className}>
       <CardHeader className="flex flex-row justify-between">
         <div>
           <CardDescription>{exercise.name}</CardDescription>

@@ -1,7 +1,7 @@
 import { Timer } from "./Timer";
 
 export type Exercise = {
-  readonly id?: number;
+  readonly id: number;
   ownerId: number;
   name: string;
   description?: string;
