@@ -19,6 +19,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as AuthenticatedSessionsIndexImport } from './routes/_authenticated/sessions/index'
 import { Route as AuthenticatedExercisesIndexImport } from './routes/_authenticated/exercises/index'
 import { Route as AuthenticatedSessionsSessionIdImport } from './routes/_authenticated/sessions/$sessionId'
+import { Route as AuthenticatedExercisesExerciseIdImport } from './routes/_authenticated/exercises/$exerciseId'
 import { Route as AuthenticatedSessionsCreateIndexImport } from './routes/_authenticated/sessions/create/index'
 import { Route as AuthenticatedExercisesCreateIndexImport } from './routes/_authenticated/exercises/create/index'
 
@@ -75,6 +76,13 @@ const AuthenticatedSessionsSessionIdRoute =
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
+const AuthenticatedExercisesExerciseIdRoute =
+  AuthenticatedExercisesExerciseIdImport.update({
+    id: '/exercises/$exerciseId',
+    path: '/exercises/$exerciseId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+
 const AuthenticatedSessionsCreateIndexRoute =
   AuthenticatedSessionsCreateIndexImport.update({
     id: '/sessions/create/',
@@ -128,6 +136,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterImport
       parentRoute: typeof rootRoute
     }
+    '/_authenticated/exercises/$exerciseId': {
+      id: '/_authenticated/exercises/$exerciseId'
+      path: '/exercises/$exerciseId'
+      fullPath: '/exercises/$exerciseId'
+      preLoaderRoute: typeof AuthenticatedExercisesExerciseIdImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/sessions/$sessionId': {
       id: '/_authenticated/sessions/$sessionId'
       path: '/sessions/$sessionId'
@@ -169,6 +184,7 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedExercisesExerciseIdRoute: typeof AuthenticatedExercisesExerciseIdRoute
   AuthenticatedSessionsSessionIdRoute: typeof AuthenticatedSessionsSessionIdRoute
   AuthenticatedExercisesIndexRoute: typeof AuthenticatedExercisesIndexRoute
   AuthenticatedSessionsIndexRoute: typeof AuthenticatedSessionsIndexRoute
@@ -177,6 +193,7 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedExercisesExerciseIdRoute: AuthenticatedExercisesExerciseIdRoute,
   AuthenticatedSessionsSessionIdRoute: AuthenticatedSessionsSessionIdRoute,
   AuthenticatedExercisesIndexRoute: AuthenticatedExercisesIndexRoute,
   AuthenticatedSessionsIndexRoute: AuthenticatedSessionsIndexRoute,
@@ -195,6 +212,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/exercises/$exerciseId': typeof AuthenticatedExercisesExerciseIdRoute
   '/sessions/$sessionId': typeof AuthenticatedSessionsSessionIdRoute
   '/exercises': typeof AuthenticatedExercisesIndexRoute
   '/sessions': typeof AuthenticatedSessionsIndexRoute
@@ -208,6 +226,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/exercises/$exerciseId': typeof AuthenticatedExercisesExerciseIdRoute
   '/sessions/$sessionId': typeof AuthenticatedSessionsSessionIdRoute
   '/exercises': typeof AuthenticatedExercisesIndexRoute
   '/sessions': typeof AuthenticatedSessionsIndexRoute
@@ -222,6 +241,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/_authenticated/exercises/$exerciseId': typeof AuthenticatedExercisesExerciseIdRoute
   '/_authenticated/sessions/$sessionId': typeof AuthenticatedSessionsSessionIdRoute
   '/_authenticated/exercises/': typeof AuthenticatedExercisesIndexRoute
   '/_authenticated/sessions/': typeof AuthenticatedSessionsIndexRoute
@@ -237,6 +257,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/login'
     | '/register'
+    | '/exercises/$exerciseId'
     | '/sessions/$sessionId'
     | '/exercises'
     | '/sessions'
@@ -249,6 +270,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/login'
     | '/register'
+    | '/exercises/$exerciseId'
     | '/sessions/$sessionId'
     | '/exercises'
     | '/sessions'
@@ -261,6 +283,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/login'
     | '/register'
+    | '/_authenticated/exercises/$exerciseId'
     | '/_authenticated/sessions/$sessionId'
     | '/_authenticated/exercises/'
     | '/_authenticated/sessions/'
@@ -308,6 +331,7 @@ export const routeTree = rootRoute
     "/_authenticated": {
       "filePath": "_authenticated.tsx",
       "children": [
+        "/_authenticated/exercises/$exerciseId",
         "/_authenticated/sessions/$sessionId",
         "/_authenticated/exercises/",
         "/_authenticated/sessions/",
@@ -323,6 +347,10 @@ export const routeTree = rootRoute
     },
     "/register": {
       "filePath": "register.tsx"
+    },
+    "/_authenticated/exercises/$exerciseId": {
+      "filePath": "_authenticated/exercises/$exerciseId.tsx",
+      "parent": "/_authenticated"
     },
     "/_authenticated/sessions/$sessionId": {
       "filePath": "_authenticated/sessions/$sessionId.tsx",

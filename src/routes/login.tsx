@@ -18,7 +18,7 @@ const loginSchema = z.object({
 type LoginValues = z.infer<typeof loginSchema>;
 
 function RouteComponent() {
-  const { auth, login } = useAuth();
+  const { login } = useAuth();
   const navigate = useRouter().navigate;
 
   const form = useForm<LoginValues>({

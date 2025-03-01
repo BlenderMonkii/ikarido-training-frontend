@@ -27,8 +27,8 @@ function RouteComponent() {
       </div>
 
       <div className="flex flex-col flex-wrap gap-4">
-        {exercises.map((exercise: Exercise) => {
-          return <ExerciseCard exercise={exercise} />;
+        {exercises.map((exercise: Exercise, index) => {
+          return <ExerciseCard exercise={exercise} key={index} />;
         })}
       </div>
     </>
@@ -42,15 +42,22 @@ type ExerciseCardProps = {
 
 export const ExerciseCard = ({ exercise, className }: ExerciseCardProps) => {
   return (
-    <Card className={className}>
-      <CardHeader className="flex flex-row justify-between">
-        <div>
-          <CardDescription>{exercise.name}</CardDescription>
-          <CardDescription>{exercise.exerciseType}</CardDescription>
-        </div>
-        <CardDescription>{exercise.duration} min</CardDescription>
-      </CardHeader>
-      <CardContent>{exercise.description}</CardContent>
-    </Card>
+    <Link
+      to={"/exercises/$exerciseId".replace(
+        "$exerciseId",
+        exercise.id.toString()
+      )}
+    >
+      <Card className={className}>
+        <CardHeader className="flex flex-row justify-between">
+          <div>
+            <CardDescription>{exercise.name}</CardDescription>
+            <CardDescription>{exercise.exerciseType}</CardDescription>
+          </div>
+          <CardDescription>{exercise.duration} min</CardDescription>
+        </CardHeader>
+        <CardContent>{exercise.description}</CardContent>
+      </Card>
+    </Link>
   );
 };

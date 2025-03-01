@@ -1,6 +1,10 @@
 import { StrictMode, useEffect } from "react";
 import ReactDOM from "react-dom/client";
-import { RouterProvider, createRouter } from "@tanstack/react-router";
+import {
+  RouterProvider,
+  createRouter,
+  useLayoutEffect,
+} from "@tanstack/react-router";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import "./index.css";
 
@@ -13,7 +17,7 @@ const queryClient = new QueryClient();
 // Create a new router instance
 const router = createRouter({
   routeTree,
-  context: { isAuthenticated: false, isLoading: true }, // Standardwert
+  context: { isAuthenticated: false }, // Standardwert
 });
 
 // Register the router instance for type safety
@@ -36,7 +40,21 @@ function RouterWithAuth() {
     console.log("router updated", auth);
   }, [auth]);
 
-  return <RouterProvider router={router} context={auth} />;
+  if (auth.isLoading) {
+    // <-- Während Auth noch lädt, zeige einen Spinner / Skeleton
+    return (
+      <div className="flex justify-center items-center pt-12">
+        <img
+          src="./public/Ikari_Do_Rund_2000x2000_Color_PinkBlauGold2.png"
+          width={100}
+          height={100}
+          className="flex justify-center items-center"
+        />
+      </div>
+    );
+  }
+
+  return <RouterProvider router={router} />;
 }
 
 // Render the app

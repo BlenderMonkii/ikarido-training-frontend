@@ -3,9 +3,16 @@ import React, {
   ReactNode,
   useContext,
   useEffect,
+  useLayoutEffect,
   useState,
 } from "react";
-import { getMe, loginUser, logoutUser, registerUser } from "../lib/api/API";
+import {
+  getMe,
+  loginUser,
+  logoutUser,
+  refreshToken,
+  registerUser,
+} from "../lib/api/API";
 
 interface AuthUser {
   name: string;
@@ -35,13 +42,40 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [auth, setAuth] = useState<AuthState>({ user: null, isLoading: true });
 
-  useEffect(() => {
+  const refreshSession = async (): Promise<boolean> => {
+    console.log("refreshSession");
+    try {
+      const success = await refreshToken();
+      if (success) {
+        // If token refresh was successful, update the user data
+        const user = await getMe();
+        setAuth({ user, isLoading: false });
+        return true;
+      } else {
+        // If refresh failed, clear the auth state
+        setAuth({ user: null, isLoading: false });
+        return false;
+      }
+    } catch (error) {
+      console.error("Session refresh failed:", error);
+      setAuth({ user: null, isLoading: false });
+      return false;
+    }
+  };
+
+  useLayoutEffect(() => {
+    console.log("main.tsx: AuthProvider: useEffect");
     getMe()
       .then((user) => {
         setAuth({ user, isLoading: false });
       })
-      .catch(() => {
-        setAuth({ user: null, isLoading: false });
+      .catch(async (error) => {
+        // If initial getMe fails, try to refresh the token
+        if (error.message === "Failed to get user data") {
+          await refreshSession();
+        } else {
+          setAuth({ user: null, isLoading: false });
+        }
       });
   }, []);
 

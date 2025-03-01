@@ -1,11 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "../../../../components/ui/carousel";
-import { Card, CardContent } from "../../../../components/ui/card";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Select,
   SelectContent,
@@ -24,7 +17,6 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Session } from "../../../../lib/types/Session";
 import { Input } from "../../../../components/ui/input";
 import { Button } from "../../../../components/ui/button";
 import { Checkbox } from "../../../../components/ui/checkbox";
@@ -145,7 +137,12 @@ function RouteComponent() {
                 </FormItem>
               )}
             />
-            <Button type="submit">Create</Button>
+            <div className="flex justify-between">
+              <Link to="..">
+                <Button>Cancel</Button>
+              </Link>
+              <Button type="submit">Create</Button>
+            </div>
           </form>
         </Form>
       </div>

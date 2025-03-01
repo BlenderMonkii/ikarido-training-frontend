@@ -1,4 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  Navigate,
+  useNavigate,
+} from "@tanstack/react-router";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -25,7 +30,7 @@ const exerciseSchema = z.object({
   description: z.string().optional(),
   isPublic: z.boolean(),
   exerciseType: z.enum(["fingerboard"]),
-  location: z.string().optional(),
+  location: z.string(),
   timer: z
     .object({
       name: z.string().min(3, "Name is required"),
@@ -47,6 +52,7 @@ const fingerboardSchema = exerciseSchema.extend({
 type ExerciseFormValues = z.infer<typeof fingerboardSchema>;
 
 function RouteComponent() {
+  const navigate = useNavigate();
   const form = useForm<ExerciseFormValues>({
     resolver: zodResolver(fingerboardSchema),
     defaultValues: {
@@ -61,6 +67,7 @@ function RouteComponent() {
     mutationFn: (data: ExerciseFormValues) => {
       return postExercises(data);
     },
+    onSuccess: () => navigate({ to: ".." }),
   });
 
   const onSubmit = (data: ExerciseFormValues) => {
@@ -215,7 +222,10 @@ function RouteComponent() {
             )}
           />
 
-          <div className="flex justify-end">
+          <div className="flex justify-between">
+            <Link to="..">
+              <Button type="button">Cancel</Button>
+            </Link>
             <Button type="submit" className="">
               Create
             </Button>
